@@ -140,6 +140,14 @@ The backend accepted the upload but renamed the file and enforced a `.jpg` exten
 ```
 No JavaScript execution occurred — no alert dialog appeared, and no script ran in the browser context.
 
+**DOM verification:** Inspecting the rendered greeting via DevTools Elements panel confirmed the payload is represented as a plain **text node**, not as an actual `<script>` element:
+```
+"¡Hola, "
+"<script>alert(document.cookie)</script>"
+"! 👋"
+```
+Each line appears quoted in the DOM tree, indicating Chrome parsed the entire string — including the `<script>` tags — as literal character content, never as markup. This rules out any possibility of delayed or conditional execution.
+
 **Analysis:** The frontend correctly escapes user-supplied data before rendering it in the DOM. This is consistent with the default auto-escaping behavior of modern frontend frameworks (e.g., React), which convert special characters into safe text representations unless a developer explicitly opts out (e.g., via `dangerouslySetInnerHTML` in React). This is an effective mitigation against Stored XSS in this specific field and rendering context.
 
 **Scope note:** This test covered one field (`nombre`) rendered in one context (dashboard greeting). Other fields or rendering contexts (e.g., HTML attributes, URLs built from user input) were not tested and could theoretically behave differently; a full assessment would need to test each independently.
