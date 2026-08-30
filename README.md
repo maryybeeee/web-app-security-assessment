@@ -136,7 +136,7 @@ The backend accepted the upload but renamed the file and enforced a `.jpg` exten
 
 **Result:** Registration succeeded. Upon login, the dashboard greeting displayed the payload **as literal, visibly escaped text**:
 ```
-¡Hola, <script>alert(document.cookie)</script>! 👋
+¡Hola, <script>alert(document.cookie)</script>! 
 ```
 No JavaScript execution occurred — no alert dialog appeared, and no script ran in the browser context.
 
@@ -144,7 +144,7 @@ No JavaScript execution occurred — no alert dialog appeared, and no script ran
 ```
 "¡Hola, "
 "<script>alert(document.cookie)</script>"
-"! 👋"
+"! "
 ```
 Each line appears quoted in the DOM tree, indicating Chrome parsed the entire string — including the `<script>` tags — as literal character content, never as markup. This rules out any possibility of delayed or conditional execution.
 
