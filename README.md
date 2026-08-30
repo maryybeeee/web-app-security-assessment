@@ -64,8 +64,8 @@ The backend accepted the upload but renamed the file and enforced a `.jpg` exten
 - Appending `?cmd=whoami` to the stored file's URL had no effect — GET parameters are ignored when no interpreter processes the file.
 - Base64-decoding the stored file client-side only revealed the raw uploaded bytes; it did not trigger any server-side evaluation.
 
-![File upload accepted, extension stripped to .jpg](screenshots/screenshot1.png)
-![Execution attempt blocked - 404 Not Found](screenshots/screenshot2.png)
+![File upload accepted, extension stripped to .jpg](screenshots/screen1.png)
+![Execution attempt blocked - 404 Not Found](screenshots/screen2.png)
 
 ### 4.2 SQL Injection — Authentication Endpoint
 
@@ -83,7 +83,7 @@ The backend accepted the upload but renamed the file and enforced a `.jpg` exten
 
 **Analysis:** The application performs server-side format validation on the email field (likely a regex-based check) before any data reaches the query layer. The malformed payload is rejected at the input-validation stage, never reaching the database layer. This is an effective mitigation for this specific field and vector.
 
-![SQL injection attempt on login - rejected by email format validation](screenshots/screenshot3.png)
+![SQL injection attempt on login - rejected by email format validation](screenshots/screen3.png)
 
 ### 4.3 SQL Injection — Registration Endpoint
 
@@ -109,7 +109,7 @@ The backend accepted the upload but renamed the file and enforced a `.jpg` exten
 
 **Note:** This finding is interesting in contrast to 4.2 — the login endpoint blocks malicious input *before* it reaches the database (via format validation), while the registration endpoint allows the input through but neutralizes it *at the query layer* (via parameterization). Both are valid defense strategies, but relying on client/format validation alone (as seen on the email field) is generally considered weaker than parameterization, since format validation can be bypassed by adjusting the payload to match the expected pattern (e.g., `injection@test.com'--`), whereas parameterized queries neutralize the injection regardless of payload shape.
 
-![Registration succeeded - payload stored as literal text, rendered in dashboard greeting](screenshots/screenshot4.png)
+![Registration succeeded - payload stored as literal text, rendered in dashboard greeting](screenshots/screen4.png)
 
 ---
 
